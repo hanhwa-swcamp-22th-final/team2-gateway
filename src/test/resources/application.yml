@@ -1,0 +1,12 @@
+# 테스트 환경 오버라이드
+# 실제 JWKS URI 접근 대신 MockBean/MockitoBean 으로 ReactiveJwtDecoder 를 대체하므로
+# 아래 URI 는 실제로 접근되지 않는다.
+spring:
+  cloud:
+    gateway:
+      routes: []  # 테스트에서는 라우트 불필요 (다운스트림 없음)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9999/.well-known/jwks.json  # 테스트용 더미 URI
