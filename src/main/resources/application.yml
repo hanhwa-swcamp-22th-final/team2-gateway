@@ -1,0 +1,49 @@
+server:
+  port: 8010
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Auth 서비스 (8011)
+        - id: auth
+          uri: http://backend-auth:8011
+          predicates:
+            - Path=/api/auth/**,/api/users/**,/api/company/**,/api/departments/**,/api/positions/**,/.well-known/jwks.json
+
+        # Master 서비스 (8012)
+        - id: master
+          uri: http://backend-master:8012
+          predicates:
+            - Path=/api/clients/**,/api/items/**,/api/buyers/**,/api/countries/**,/api/ports/**,/api/currencies/**,/api/incoterms/**,/api/payment-terms/**
+
+        # Activity 서비스 (8013)
+        - id: activity
+          uri: http://backend-activity:8013
+          predicates:
+            - Path=/api/activities/**,/api/activity-packages/**,/api/email-logs/**,/api/contacts/**
+
+        # Documents 서비스 (8014)
+        - id: documents
+          uri: http://backend-documents:8014
+          predicates:
+            - Path=/api/purchase-orders/**,/api/proforma-invoices/**,/api/commercial-invoices/**,/api/packing-lists/**,/api/production-orders/**,/api/shipment-orders/**,/api/shipments/**,/api/collections/**,/api/approval-requests/**,/api/emails/**,/api/docs-revisions/**
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # backend-auth 가 Phase 1 에서 노출하는 JWKS 엔드포인트 (RS256)
+          jwk-set-uri: http://backend-auth:8011/.well-known/jwks.json
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
