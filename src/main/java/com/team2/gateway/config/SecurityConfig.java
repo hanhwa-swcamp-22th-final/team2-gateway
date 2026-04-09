@@ -50,6 +50,10 @@ public class SecurityConfig {
                     "/actuator/health"
                 ).permitAll()
 
+                // -- 외부 접근 차단 (서비스 내부 전용 엔드포인트) ---------------
+                // 활동 서비스의 internal email-logs는 같은 docker network 내부에서만 호출되어야 함
+                .pathMatchers("/api/email-logs/internal/**").denyAll()
+
                 // -- 역할 기반 접근 제어 ----------------------------------------
                 // 사용자 관리 -- ADMIN 전용
                 .pathMatchers("/api/users/**").hasRole("ADMIN")
