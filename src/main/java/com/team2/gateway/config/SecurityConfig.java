@@ -54,13 +54,15 @@ public class SecurityConfig {
                 // 관례: /api/**\/internal/** 은 서비스 간 시스템 호출 전용.
                 // 같은 docker network 내부에서 X-Internal-Token 과 함께 호출되어야 함.
                 // 현재 대상:
-                //   - Activity /api/email-logs/internal/**    (Documents → Activity 메일 로그)
-                //   - Auth     /api/users/internal/**         (Documents → Auth 사용자 조회)
-                //   - Master   /api/buyers/internal/**        (Documents → Master 바이어 조회)
+                //   - Activity  /api/email-logs/internal/**   (Documents → Activity 메일 로그)
+                //   - Auth      /api/users/internal/**        (Documents → Auth 사용자 조회)
+                //   - Master    /api/buyers/internal/**       (Documents → Master 바이어 조회)
+                //   - Documents /api/emails/internal/**       (Activity → Documents 재전송 no-log)
                 .pathMatchers(
                         "/api/email-logs/internal/**",
                         "/api/users/internal/**",
-                        "/api/buyers/internal/**"
+                        "/api/buyers/internal/**",
+                        "/api/emails/internal/**"
                 ).denyAll()
 
                 // -- 역할 기반 접근 제어 ----------------------------------------
@@ -72,9 +74,12 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.PUT,    "/api/items/**").hasRole("ADMIN")
                 .pathMatchers(HttpMethod.DELETE, "/api/items/**").hasRole("ADMIN")
 
-                // 거래처(Clients) CUD -- ADMIN 또는 SALES
-                .pathMatchers(HttpMethod.POST, "/api/clients/**").hasAnyRole("ADMIN", "SALES")
-                .pathMatchers(HttpMethod.PUT,  "/api/clients/**").hasAnyRole("ADMIN", "SALES")
+                // 거래처(Clients) CUD
+                // POST/PUT: ADMIN 또는 SALES
+                // DELETE  : ADMIN 전용 (물리/소프트 삭제 모두 최고 권한으로 제한)
+                .pathMatchers(HttpMethod.POST,   "/api/clients/**").hasAnyRole("ADMIN", "SALES")
+                .pathMatchers(HttpMethod.PUT,    "/api/clients/**").hasAnyRole("ADMIN", "SALES")
+                .pathMatchers(HttpMethod.DELETE, "/api/clients/**").hasRole("ADMIN")
 
                 // 생산지시서 -- ADMIN 또는 PRODUCTION
                 .pathMatchers("/api/production-orders/**").hasAnyRole("ADMIN", "PRODUCTION")
