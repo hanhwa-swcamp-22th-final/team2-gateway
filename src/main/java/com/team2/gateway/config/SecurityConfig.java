@@ -62,7 +62,8 @@ public class SecurityConfig {
                         "/api/email-logs/internal/**",
                         "/api/users/internal/**",
                         "/api/buyers/internal/**",
-                        "/api/emails/internal/**"
+                        "/api/emails/internal/**",
+                        "/api/contacts/internal/**"
                 ).denyAll()
 
                 // -- 역할 기반 접근 제어 ----------------------------------------
