@@ -14,7 +14,7 @@ spring:
             - id: auth
               uri: http://backend-auth:8011
               predicates:
-                - Path=/api/auth/**,/api/users/**,/api/company/**,/api/departments/**,/api/positions/**,/.well-known/jwks.json
+                - Path=/api/auth/**,/api/users/**,/api/company/**,/api/departments/**,/api/teams/**,/api/positions/**,/.well-known/jwks.json
 
             # Master 서비스 (8012)
             - id: master
