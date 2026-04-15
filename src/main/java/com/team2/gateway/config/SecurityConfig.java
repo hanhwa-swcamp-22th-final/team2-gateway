@@ -82,12 +82,13 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.PUT,    "/api/clients/**").hasAnyRole("ADMIN", "SALES")
                 .pathMatchers(HttpMethod.DELETE, "/api/clients/**").hasRole("ADMIN")
 
-                // 생산지시서 -- ADMIN 또는 PRODUCTION
-                .pathMatchers("/api/production-orders/**").hasAnyRole("ADMIN", "PRODUCTION")
-
-                // 출하지시서/출하현황 -- ADMIN 또는 SHIPPING
-                .pathMatchers("/api/shipment-orders/**", "/api/shipments/**")
-                    .hasAnyRole("ADMIN", "SHIPPING")
+                // 생산지시서 / 출하지시서 / 출하현황 -- 모든 인증 사용자 read+CUD 가능
+                // 영업담당자가 본인 PO 의 후속 지시서 진행 상황을 확인하고 CUD 도 가능해야 함
+                // 단, "출하완료 처리" (PUT /api/shipments/{id}) 는 controller @PreAuthorize 에서
+                // ADMIN/SHIPPING 으로 제한 / "생산완료 처리" 는 controller 추가 시 ADMIN/PRODUCTION
+                .pathMatchers("/api/production-orders/**",
+                              "/api/shipment-orders/**",
+                              "/api/shipments/**").authenticated()
 
                 // 나머지 모든 요청 -- 인증 필요
                 .anyExchange().authenticated()
