@@ -73,6 +73,8 @@ public class SecurityConfig {
                 ).denyAll()
 
                 // -- 역할 기반 접근 제어 ----------------------------------------
+                // 뷰어 선택 등 모든 인증 사용자에게 허용된 제한 조회 (ADMIN 룰 보다 먼저)
+                .pathMatchers(HttpMethod.GET, "/api/users/viewable").authenticated()
                 // 사용자 관리 -- ADMIN 전용
                 .pathMatchers("/api/users/**").hasRole("ADMIN")
 
