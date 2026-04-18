@@ -53,9 +53,24 @@ public class SecurityConfig {
                 // -- 외부 접근 차단 (서비스 내부 전용 엔드포인트) ---------------
                 // 관례: /api/**\/internal/** 은 서비스 간 시스템 호출 전용.
                 // 같은 docker network 내부에서 X-Internal-Token 과 함께 호출되어야 함.
-                // 개별 경로 열거 대신 단일 패턴으로 전환 — 신규 internal 엔드포인트가
-                // 추가될 때마다 여기를 갱신하지 않아도 외부에서 차단된다.
-                .pathMatchers("/api/**/internal/**").denyAll()
+                //
+                // 주의: Spring Cloud Gateway (WebFlux) 의 PathPatternParser 는 엄격해
+                // `**` 를 경로 중간에 둘 수 없다 ("/api/**/internal/**" 불가).
+                // Spring MVC 의 AntPathMatcher 와 다른 문법. 신규 internal 엔드포인트가
+                // 추가되면 반드시 이 리스트에 경로를 명시해야 한다.
+                // 현재 대상:
+                //   - Activity  /api/email-logs/internal/**   (Documents → Activity)
+                //   - Activity  /api/contacts/internal/**      (Documents → Activity)
+                //   - Auth      /api/users/internal/**        (Documents/Activity → Auth)
+                //   - Master    /api/buyers/internal/**       (Documents → Master)
+                //   - Documents /api/emails/internal/**       (Activity → Documents)
+                .pathMatchers(
+                        "/api/email-logs/internal/**",
+                        "/api/users/internal/**",
+                        "/api/buyers/internal/**",
+                        "/api/emails/internal/**",
+                        "/api/contacts/internal/**"
+                ).denyAll()
 
                 // -- 역할 기반 접근 제어 ----------------------------------------
                 // 사용자 관리 -- ADMIN 전용
