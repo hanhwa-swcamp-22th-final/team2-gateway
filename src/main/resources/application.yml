@@ -32,7 +32,7 @@ spring:
             - id: documents
               uri: http://backend-documents:8014
               predicates:
-                - Path=/api/purchase-orders/**,/api/proforma-invoices/**,/api/commercial-invoices/**,/api/packing-lists/**,/api/production-orders/**,/api/shipment-orders/**,/api/shipments/**,/api/collections/**,/api/approval-requests/**,/api/emails/**,/api/docs-revisions/**
+                - Path=/api/purchase-orders/**,/api/proforma-invoices/**,/api/commercial-invoices/**,/api/packing-lists/**,/api/production-orders/**,/api/shipment-orders/**,/api/shipments/**,/api/collections/**,/api/approval-requests/**,/api/emails/**,/api/docs-revisions/**,/api/assignable-users
 
   security:
     oauth2:
