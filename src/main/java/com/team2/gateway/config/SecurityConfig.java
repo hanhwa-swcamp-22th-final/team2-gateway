@@ -53,18 +53,9 @@ public class SecurityConfig {
                 // -- 외부 접근 차단 (서비스 내부 전용 엔드포인트) ---------------
                 // 관례: /api/**\/internal/** 은 서비스 간 시스템 호출 전용.
                 // 같은 docker network 내부에서 X-Internal-Token 과 함께 호출되어야 함.
-                // 현재 대상:
-                //   - Activity  /api/email-logs/internal/**   (Documents → Activity 메일 로그)
-                //   - Auth      /api/users/internal/**        (Documents → Auth 사용자 조회)
-                //   - Master    /api/buyers/internal/**       (Documents → Master 바이어 조회)
-                //   - Documents /api/emails/internal/**       (Activity → Documents 재전송 no-log)
-                .pathMatchers(
-                        "/api/email-logs/internal/**",
-                        "/api/users/internal/**",
-                        "/api/buyers/internal/**",
-                        "/api/emails/internal/**",
-                        "/api/contacts/internal/**"
-                ).denyAll()
+                // 개별 경로 열거 대신 단일 패턴으로 전환 — 신규 internal 엔드포인트가
+                // 추가될 때마다 여기를 갱신하지 않아도 외부에서 차단된다.
+                .pathMatchers("/api/**/internal/**").denyAll()
 
                 // -- 역할 기반 접근 제어 ----------------------------------------
                 // 사용자 관리 -- ADMIN 전용
