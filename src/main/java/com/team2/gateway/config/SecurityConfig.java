@@ -68,6 +68,7 @@ public class SecurityConfig {
                         "/api/email-logs/internal/**",
                         "/api/users/internal/**",
                         "/api/buyers/internal/**",
+                        "/api/clients/internal/**",
                         "/api/emails/internal/**",
                         "/api/contacts/internal/**"
                 ).denyAll()
